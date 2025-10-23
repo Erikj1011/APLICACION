@@ -1,0 +1,23 @@
+{% extends 'tienda/base.html' %}
+
+{% block content %}
+<h2>Todos los videojuegos</h2>
+<div class="productos">
+    {% for juego in videojuegos %}
+    <div class="producto">
+        {% if juego.imagen %}
+        <img src="{{ juego.imagen.url }}" alt="{{ juego.nombre }}">
+        {% endif %}
+        <h3>{{ juego.nombre }}</h3>
+        <p>{{ juego.descripcion|truncatechars:100 }}</p>
+        <p>Precio: ${{ juego.precio }}</p>
+        <a href="{% url 'detalle_videojuego' juego.pk %}">Ver detalles</a>
+        {% if user.is_authenticated %}
+        <a href="{% url 'agregar_carrito' juego.pk %}">Agregar al carrito</a>
+        {% endif %}
+    </div>
+    {% empty %}
+    <p>No hay videojuegos disponibles.</p>
+    {% endfor %}
+</div>
+{% endblock %}

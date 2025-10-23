@@ -1,0 +1,25 @@
+{% extends 'tienda/base.html' %}
+
+{% block content %}
+<h2>{{ videojuego.nombre }}</h2>
+{% if videojuego.imagen %}
+<img src="{{ videojuego.imagen.url }}" alt="{{ videojuego.nombre }}" style="width:300px;">
+{% endif %}
+<p>{{ videojuego.descripcion }}</p>
+<p>Precio: ${{ videojuego.precio }}</p>
+<p>Stock: {{ videojuego.stock }}</p>
+
+{% if user.is_authenticated %}
+<a href="{% url 'agregar_carrito' videojuego.pk %}">Agregar al carrito</a>
+{% endif %}
+
+<h3>Reseñas</h3>
+{% for resena in resenas %}
+<div class="resena">
+    <strong>{{ resena.usuario.username }}</strong> - {{ resena.calificacion }}/5
+    <p>{{ resena.comentario }}</p>
+</div>
+{% empty %}
+<p>No hay reseñas todavía.</p>
+{% endfor %}
+{% endblock %}
