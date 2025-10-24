@@ -1,25 +1,56 @@
 {% extends 'tienda/base.html' %}
-
+{% load static %}
 {% block content %}
-<h2>Tu Carrito</h2>
-{% if items %}
-<table>
-    <tr>
-        <th>Videojuego</th>
-        <th>Cantidad</th>
-        <th>Subtotal</th>
-    </tr>
-    {% for item in items %}
-    <tr>
-        <td>{{ item.videojuego.nombre }}</td>
-        <td>{{ item.cantidad }}</td>
-        <td>${{ item.subtotal }}</td>
-    </tr>
-    {% endfor %}
-</table>
-<p>Total: ${{ total }}</p>
-{% else %}
-<p>Tu carrito está vacío.</p>
-{% endif %}
+<h2 class="section-title">Tu carrito</h2>
+
+<div class="carrito-wrapper">
+    {% if items %}
+    <table class="carrito-table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td class="td-producto">
+                    {% if item.videojuego.imagen %}
+                        <img src="{{ item.videojuego.imagen.url }}" alt="{{ item.videojuego.nombre }}" class="mini-img" onerror="imageFallback(this)">
+                    {% else %}
+                        <img src="{% static 'tienda/img/placeholder.svg' %}" alt="sin imagen" class="mini-img">
+                    {% endif %}
+                    <div class="info">
+                        <strong>{{ item.videojuego.nombre }}</strong>
+                        <p>{{ item.videojuego.descripcion|truncatechars:70 }}</p>
+                    </div>
+                </td>
+                <td>{{ item.cantidad }}</td>
+                <td>${{ item.subtotal|floatformat:2 }}</td>
+                <td>
+                    <a class="btn small" href="{% url 'detalle_videojuego' item.videojuego.pk %}">Ver</a>
+                    <a class="btn small" href="{% url 'disminuir_item' item.id %}">-</a>
+                    <a class="btn small" href="{% url 'agregar_carrito' item.videojuego.pk %}">+</a>
+                    <a class="btn small danger confirm" href="{% url 'eliminar_item' item.id %}" data-message="¿Eliminar {{ item.videojuego.nombre }} del carrito?">Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <div class="carrito-footer">
+        <strong>Total:</strong> ${{ total|floatformat:2 }}
+        <div class="carrito-acciones">
+            <a class="btn" href="{% url 'productos' %}">Seguir comprando</a>
+            <a class="btn danger confirm" href="{% url 'vaciar_carrito' %}" data-message="¿Vaciar todo el carrito? Esta acción no se puede deshacer.">Vaciar carrito</a>
+        </div>
+    </div>
+    {% else %}
+        <p>Tu carrito está vacío.</p>
+        <a class="btn" href="{% url 'productos' %}">Ir a productos</a>
+    {% endif %}
+</div>
 {% endblock %}
-S

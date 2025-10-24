@@ -1,43 +1,331 @@
-/* Estilos neón para Gaming World Software */
-:root{
-  --bg:#081226;
-  --card:#0f1724;
-  --neon-blue:#00b4ff;
-  --neon-orange:#ff7a18;
-  --muted:#9aa8bf;
-}
-*{box-sizing:border-box}
-body{
-  margin:0;
-  font-family:Inter, 'Segoe UI', Roboto, Arial, sans-serif;
-  background:linear-gradient(180deg,#02030a 0%,var(--bg) 60%);
-  color:#e6eef8;
-}
-header h1{ color:var(--neon-blue); text-shadow:0 0 8px rgba(0,180,255,0.25);} 
-.productos-section{max-width:1100px;margin:36px auto;padding:0 18px}
-.productos-header h2{font-size:1.75rem;margin:6px 0;color:var(--neon-blue);letter-spacing:0.6px}
-.productos-header .sub{color:var(--muted);margin:0 0 18px}
-.productos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
-.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.12));border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);box-shadow:0 6px 18px rgba(2,6,23,0.6);transition:transform .18s ease, box-shadow .18s ease}
-.card:hover{transform:translateY(-6px);box-shadow:0 18px 36px rgba(0,0,0,0.6);}
-.card-media{height:150px;background:linear-gradient(90deg, rgba(0,180,255,0.06), rgba(255,122,24,0.03));display:flex;align-items:center;justify-content:center}
-.card-media img{max-width:100%;max-height:100%;object-fit:cover;display:block}
-.card-body{padding:14px}
-.card-title{margin:0 0 6px;color:#dff6ff}
-.card-desc{margin:0 0 12px;color:var(--muted);font-size:0.95rem}
-.card-footer{display:flex;align-items:center;justify-content:space-between}
-.price{background:linear-gradient(90deg,var(--neon-blue),var(--neon-orange));padding:6px 10px;border-radius:8px;color:#021322;font-weight:700}
-.actions{display:flex;gap:8px}
-.btn{display:inline-block;padding:8px 10px;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem}
-.btn-outline{color:var(--neon-blue);border:1px solid rgba(0,180,255,0.18);background:transparent}
-.btn-primary{background:var(--neon-orange);color:#081226}
-.empty{text-align:center;color:var(--muted);padding:30px}
+/* =========================
+   GWS - Gaming World Software
+   Estilo Futurista / Neón
+========================= */
 
-/* Responsive tweaks */
-@media (max-width:600px){
-  .card-media{height:130px}
-  .productos-header h2{font-size:1.4rem}
+/* Fondo y tipografía general */
+
+body {
+  margin: 0;
+  font-family: 'Orbitron', 'Segoe UI', sans-serif;
+  background-color: #0a0a1a; /* Azul muy oscuro */
+  color: #ffffff;
 }
 
-/* small utilities */
-.sub{font-size:0.95rem}
+
+/* HEADER / NAV */
+header {
+  background: linear-gradient(90deg, #ff6f00, #00d4ff);
+  padding: 20px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 0 25px rgba(0, 212, 255, 0.7);
+}
+
+header h1 {
+  font-size: 2.5em;
+  color: #fff;
+  text-shadow: 0 0 15px #00d4ff, 0 0 20px #ff6f00;
+}
+
+nav a {
+  color: #fff;
+  text-decoration: none;
+  margin-left: 25px;
+  font-weight: bold;
+  font-size: 1.1em;
+  transition: 0.3s;
+}
+
+nav a:hover {
+  color: #ff6f00;
+  text-shadow: 0 0 10px #ff6f00, 0 0 15px #00d4ff;
+}
+
+/* HERO */
+.hero {
+  text-align: center;
+  padding: 60px 20px;
+  background: radial-gradient(circle at center, #001f3f, #0a0a1a);
+}
+
+.hero h2 {
+  font-size: 2.2em;
+  color: #00d4ff;
+  text-shadow: 0 0 10px #00d4ff, 0 0 20px #ff6f00;
+  margin-top: 15px;
+}
+
+.hero p {
+  font-size: 1.2em;
+  color: #fff;
+  text-shadow: 0 0 5px #00d4ff;
+}
+
+.hero img.cohete {
+  width: 150px;
+  animation: float 3s infinite alternate;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  100% { transform: translateY(-20px); }
+}
+
+/* PRODUCTOS */
+.productos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 25px;
+  padding: 40px 20px;
+}
+
+.producto {
+  background: #111122;
+  border: 2px solid #00d4ff;
+  border-radius: 20px;
+  padding: 20px;
+  text-align: center;
+  transition: 0.4s;
+}
+
+.producto:hover {
+  border-color: #ff6f00;
+  box-shadow: 0 0 25px #ff6f00, 0 0 15px #00d4ff;
+}
+
+.producto img {
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 0 10px #00d4ff;
+  transition: 0.3s;
+}
+
+.producto img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #ff6f00, 0 0 15px #00d4ff;
+}
+
+.producto h3 {
+  margin: 15px 0 10px;
+  font-size: 1.3em;
+  color: #00d4ff;
+  text-shadow: 0 0 8px #00d4ff;
+}
+
+.producto p {
+  font-size: 1.1em;
+  color: #ffffff;
+}
+
+/* BOTONES */
+button, .btn {
+  background: linear-gradient(90deg, #00d4ff, #ff6f00);
+  border: none;
+  padding: 12px 25px;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1em;
+  cursor: pointer;
+  border-radius: 12px;
+  text-transform: uppercase;
+  box-shadow: 0 0 10px #00d4ff, 0 0 15px #ff6f00;
+  transition: 0.4s;
+}
+
+button:hover, .btn:hover {
+  background: linear-gradient(90deg, #ff6f00, #00d4ff);
+  box-shadow: 0 0 15px #ff6f00, 0 0 20px #00d4ff;
+}
+
+/* FOOTER */
+footer {
+  text-align: center;
+  padding: 20px;
+  background: #111122;
+  color: #00d4ff;
+  text-shadow: 0 0 8px #00d4ff;
+  margin-top: 40px;
+}
+
+/* =========================
+   Mejoras UI: botones, hover imagen y detalle
+========================= */
+
+/* Botones de producto */
+.producto .btn {
+  display: inline-block;
+  margin: 10px 5px;
+  padding: 12px 20px;
+  font-size: 1em;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: #fff;
+  background: linear-gradient(90deg, #00d4ff, #ff6f00);
+  border: 2px solid #00d4ff;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+  text-decoration: none;
+  box-shadow: 0 0 8px #00d4ff, 0 0 12px #ff6f00;
+}
+
+.producto .btn:hover {
+  background: linear-gradient(90deg, #ff6f00, #00d4ff);
+  box-shadow: 0 0 15px #ff6f00, 0 0 20px #00d4ff;
+  transform: translateY(-2px);
+}
+
+/* Hover suave sobre la foto */
+.producto img {
+  max-width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 0 10px #00d4ff;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: block;
+}
+
+.producto img:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #ff6f00, 0 0 15px #00d4ff;
+}
+
+/* Estilos para la página de detalle */
+.detalle-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 40px;
+  padding: 40px 20px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.detalle-imagen {
+  flex: 1 1 40%;
+  max-width: 500px;
+}
+
+.detalle-imagen img {
+  width: 100%;
+  border-radius: 15px;
+  box-shadow: 0 0 20px #00d4ff, 0 0 30px #ff6f00;
+}
+
+.detalle-info {
+  flex: 1 1 45%;
+  color: #ffffff;
+  background: #111122;
+  padding: 25px;
+  border-radius: 15px;
+  box-shadow: 0 0 15px #00d4ff, 0 0 20px #ff6f00;
+}
+
+.detalle-info h2 {
+  color: #00d4ff;
+  text-shadow: 0 0 8px #00d4ff;
+  margin-bottom: 15px;
+}
+
+.detalle-info p {
+  margin-bottom: 10px;
+  font-size: 1.1em;
+}
+
+.detalle-info .btn {
+  margin-top: 15px;
+}
+
+/* Toasts / mensajes */
+#gws-toasts {
+  position: fixed;
+  top: 20px;
+  right: 20px;
+  z-index: 1100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.gws-toast {
+  min-width: 260px;
+  max-width: 360px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  color: #021322;
+  font-weight: 700;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.6);
+  transform-origin: right top;
+  opacity: 0;
+  transform: translateY(-10px) scale(0.98);
+  transition: all 240ms ease;
+}
+.gws-toast.show {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+.gws-toast.success { background: linear-gradient(90deg,#00d4ff,#7ef1ff); }
+.gws-toast.info { background: linear-gradient(90deg,#cfefff,#9ad4ff); }
+.gws-toast.warning { background: linear-gradient(90deg,#ffd28a,#ffb86b); }
+.gws-toast.error { background: linear-gradient(90deg,#ff8a8a,#ff6f6f); }
+.gws-toast .close {
+  float: right;
+  cursor: pointer;
+  font-weight: 900;
+  opacity: 0.9;
+}
+
+/* Modal de confirmación */
+#gws-confirm-modal {
+  display: none; /* mostrado por JS */
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  font-family: inherit;
+}
+.gws-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(2,6,23,0.7);
+  backdrop-filter: blur(4px) saturate(1.1);
+}
+.gws-modal-panel {
+  position: relative;
+  max-width: 520px;
+  margin: 8vh auto;
+  background: linear-gradient(180deg, rgba(10,12,30,0.96), rgba(6,8,20,0.97));
+  border: 1px solid rgba(68, 138, 255, 0.12);
+  box-shadow: 0 8px 30px rgba(2,6,23,0.6), 0 0 30px rgba(68,138,255,0.05) inset;
+  padding: 20px;
+  border-radius: 12px;
+  color: #e6f0ff;
+}
+.gws-modal-panel h3{
+  margin: 0 0 8px 0;
+  color: #bfe1ff;
+}
+.gws-modal-panel p{
+  margin: 0 0 16px 0;
+  color: #cddff7;
+}
+.gws-modal-actions{
+  display:flex;
+  gap:10px;
+  justify-content:flex-end;
+}
+.gws-modal-btn{
+  padding: 8px 14px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight:600;
+}
+.gws-modal-btn.ok{
+  background: linear-gradient(90deg,#2ea3ff,#00e5a8);
+  color: #021024;
+}
+.gws-modal-btn.cancel{
+  background: transparent;
+  color: #cbd7ef;
+  border: 1px solid rgba(199,214,255,0.06);
+}
+

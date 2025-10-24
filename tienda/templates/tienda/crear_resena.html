@@ -1,0 +1,36 @@
+{% extends 'tienda/base.html' %}
+{% load static %}
+
+{% block content %}
+<section class="hero">
+    <h2>Escribir reseña</h2>
+    <p>Comparte tu experiencia con otros jugadores</p>
+</section>
+
+<div class="form-panel" style="max-width:700px;margin:30px auto;padding:24px;background:#0f1220;border-radius:12px;box-shadow:0 8px 30px rgba(0,0,0,0.6);">
+    <h3 style="color:#00d4ff;margin-bottom:8px;">{{ videojuego.nombre }}</h3>
+    <form method="post">
+        {% csrf_token %}
+        {% if form.non_field_errors %}
+            <div class="error">{{ form.non_field_errors }}</div>
+        {% endif %}
+
+        <label for="id_calificacion" style="color:#9bcfff;">Calificación (1-5)</label>
+        <div>{{ form.calificacion }}</div>
+        {% if form.calificacion.errors %}
+            <div class="error">{{ form.calificacion.errors }}</div>
+        {% endif %}
+
+        <label for="id_comentario" style="color:#9bcfff;margin-top:10px;display:block;">Tu reseña</label>
+        <div>{{ form.comentario }}</div>
+        {% if form.comentario.errors %}
+            <div class="error">{{ form.comentario.errors }}</div>
+        {% endif %}
+
+        <div style="margin-top:16px;display:flex;gap:12px;">
+            <button type="submit" class="btn">Publicar reseña</button>
+            <a href="{% url 'detalle_videojuego' videojuego.pk %}" class="btn" style="background:transparent;border:2px solid #00d4ff;color:#00d4ff;">Volver</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

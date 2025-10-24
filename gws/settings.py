@@ -129,8 +129,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 import os
 
 # Archivos multimedia (imágenes subidas desde el admin)
-MEDIA_URL = '/videojuegos/'
-MEDIA_ROOT = BASE_DIR / 'videojuegos'
+MEDIA_URL = '/media/'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'videojuegos')
 
 # Archivos estáticos (CSS, JS, imágenes fijas)
 STATIC_URL = '/static/'

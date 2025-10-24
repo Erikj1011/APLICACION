@@ -5,9 +5,11 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include('tienda.urls')),  # Conecta las rutas de la app tienda
+    path('', include('tienda.urls')),
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
 
+# Servir MEDIA en desarrollo
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
