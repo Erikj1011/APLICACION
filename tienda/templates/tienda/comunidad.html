@@ -1,0 +1,20 @@
+{% extends 'tienda/base.html' %}
+{% block content %}
+<h2>Comunidad</h2>
+{% if user.is_authenticated %}
+  <a class="btn" href="{% url 'crear_hilo' %}">Crear hilo</a>
+{% else %}
+  <p>Inicia sesión para participar en la comunidad.</p>
+{% endif %}
+<ul class="foros">
+  {% for hilo in hilos %}
+    <li class="hilo">
+      <a href="{% url 'ver_hilo' hilo.pk %}"><strong>{{ hilo.titulo }}</strong></a>
+      <div class="meta">por {{ hilo.autor.username }} — {{ hilo.fecha }}</div>
+      <p>{{ hilo.contenido|truncatechars:200 }}</p>
+    </li>
+  {% empty %}
+    <p>No hay hilos aún.</p>
+  {% endfor %}
+</ul>
+{% endblock %}

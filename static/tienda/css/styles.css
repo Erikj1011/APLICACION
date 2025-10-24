@@ -282,6 +282,15 @@ footer {
   z-index: 9999;
   font-family: inherit;
 }
+
+  /* Modal de confirmación */
+  #gws-confirm-modal { display: none; position: fixed; inset:0; z-index:9999; }
+  .gws-modal-backdrop { position:absolute; inset:0; background: rgba(2,6,23,0.7); backdrop-filter: blur(4px); }
+  .gws-modal-panel { position:relative; max-width:520px; margin:8vh auto; background:linear-gradient(180deg, rgba(10,12,30,0.96), rgba(6,8,20,0.97)); padding:20px; border-radius:12px; color:#e6f0ff; }
+  .gws-modal-actions{ display:flex; gap:10px; justify-content:flex-end; }
+  .gws-modal-btn{ padding:8px 14px; border-radius:8px; font-weight:600; cursor:pointer; }
+  .gws-modal-btn.ok{ background: linear-gradient(90deg,#2ea3ff,#00e5a8); color:#021024; }
+  .gws-modal-btn.cancel{ background:transparent; color:#cbd7ef; border:1px solid rgba(199,214,255,0.06); }
 .gws-modal-backdrop {
   position: absolute;
   inset: 0;

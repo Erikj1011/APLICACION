@@ -1,0 +1,12 @@
+{% extends 'tienda/base.html' %}
+{% block content %}
+<h2>{{ hilo.titulo }}</h2>
+<div class="meta">por {{ hilo.autor.username }} — {{ hilo.fecha }}</div>
+<div class="contenido" style="margin-top:12px;">{{ hilo.contenido }}</div>
+{% if user.is_authenticated %}
+  <p>Comentarios no implementados en esta versión.</p>
+{% else %}
+  <p>Inicia sesión para comentar.</p>
+{% endif %}
+<a class="btn" href="{% url 'comunidad' %}">Volver</a>
+{% endblock %}

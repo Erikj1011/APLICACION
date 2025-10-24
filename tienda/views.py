@@ -1,9 +1,11 @@
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from django.contrib.auth import login
 from django.urls import reverse
-from .models import Videojuego, Carrito, ItemCarrito, Resena
-from .forms import ResenaForm
+from .models import Videojuego, Carrito, ItemCarrito, Compra, DetalleCompra, Resena
+from .forms import RegisterForm, ResenaForm
+from django.db import transaction
 
 
 # ==========================
@@ -28,7 +30,6 @@ def productos(request):
 def detalle_videojuego(request, pk):
     videojuego = get_object_or_404(Videojuego, pk=pk)
     resenas = Resena.objects.filter(videojuego=videojuego).order_by('-fecha')
-    # incluir formulario vacío para poder mostrarlo inline en la plantilla
     form = ResenaForm()
     return render(request, 'tienda/detalle.html', {
         'videojuego': videojuego,
@@ -40,9 +41,9 @@ def detalle_videojuego(request, pk):
 # ==========================
 # VISTA: Carrito de compras
 # ==========================
-@login_required
-def carrito(request):
-    carrito, creado = Carrito.objects.get_or_create(usuario=request.user)
+@login_required(login_url='/accounts/login/')
+def ver_carrito(request):
+    carrito, _ = Carrito.objects.get_or_create(usuario=request.user)
     items = carrito.items.all()
     total = carrito.total_carrito()
     return render(request, 'tienda/carrito.html', {'carrito': carrito, 'items': items, 'total': total})
@@ -51,75 +52,67 @@ def carrito(request):
 # ==========================
 # VISTA: Agregar al carrito (acumulativo + feedback)
 # ==========================
-@login_required(login_url='/login/')
+@login_required(login_url='/accounts/login/')
 def agregar_carrito(request, pk):
     videojuego = get_object_or_404(Videojuego, pk=pk)
-    carrito, creado = Carrito.objects.get_or_create(usuario=request.user)
+    carrito, _ = Carrito.objects.get_or_create(usuario=request.user)
     item, creado = ItemCarrito.objects.get_or_create(carrito=carrito, videojuego=videojuego)
-    # Validación de stock: no permitir cantidad mayor al stock disponible
-    current_qty = item.cantidad if not creado else 0
-    if videojuego.stock <= current_qty:
-        messages.error(request, f"No hay suficiente stock de {videojuego.nombre}.")
-        return redirect(request.META.get('HTTP_REFERER') or reverse('productos'))
-
     if not creado:
         item.cantidad += 1
-    else:
-        item.cantidad = 1
+    # Validación básica de stock
+    if videojuego.stock and item.cantidad > videojuego.stock:
+        item.cantidad = videojuego.stock
+        messages.warning(request, "Cantidad limitada por stock disponible.")
     item.save()
-    messages.success(request, f"{videojuego.nombre} agregado al carrito ✅")
-    # Volver a la página anterior (referer) para que el usuario siga navegando
-    return redirect(request.POST.get('next') or request.META.get('HTTP_REFERER') or reverse('productos'))
+    messages.success(request, f"{videojuego.nombre} agregado al carrito.")
+    return redirect(request.GET.get('next') or 'productos')
 
 
 # ==========================
 # VISTA: Crear reseña (login requerido)
 # ==========================
-@login_required(login_url='/login/')
+@login_required(login_url='/accounts/login/')
 def crear_resena(request, pk):
     videojuego = get_object_or_404(Videojuego, pk=pk)
     if request.method == 'POST':
         form = ResenaForm(request.POST)
         if form.is_valid():
-            resena = form.save(commit=False)
-            resena.usuario = request.user
-            resena.videojuego = videojuego
-            resena.save()
-            messages.success(request, 'Reseña publicada ✅')
+            res = form.save(commit=False)
+            res.usuario = request.user
+            res.videojuego = videojuego
+            res.save()
+            messages.success(request, "Reseña publicada.")
             return redirect('detalle_videojuego', pk=pk)
-    else:
-        form = ResenaForm()
-    return render(request, 'tienda/crear_resena.html', {'form': form, 'videojuego': videojuego})
+        else:
+            messages.error(request, "Error en el formulario de reseña.")
+    return redirect('detalle_videojuego', pk=pk)
 
 
-@login_required
-def disminuir_item(request, item_id):
-    item = get_object_or_404(ItemCarrito, id=item_id, carrito__usuario=request.user)
+@login_required(login_url='/accounts/login/')
+def disminuir_item(request, pk):
+    item = get_object_or_404(ItemCarrito, pk=pk, carrito__usuario=request.user)
     if item.cantidad > 1:
         item.cantidad -= 1
         item.save()
-        messages.info(request, f'Cantidad reducida: {item.videojuego.nombre}')
     else:
         item.delete()
-        messages.info(request, f'Item eliminado: {item.videojuego.nombre}')
-    return redirect('carrito')
+    return redirect('ver_carrito')
 
 
-@login_required
-def eliminar_item(request, item_id):
-    item = get_object_or_404(ItemCarrito, id=item_id, carrito__usuario=request.user)
-    nombre = item.videojuego.nombre
+@login_required(login_url='/accounts/login/')
+def eliminar_item(request, pk):
+    item = get_object_or_404(ItemCarrito, pk=pk, carrito__usuario=request.user)
     item.delete()
-    messages.success(request, f'Eliminado: {nombre}')
-    return redirect('carrito')
+    messages.info(request, "Producto eliminado del carrito.")
+    return redirect('ver_carrito')
 
 
-@login_required
+@login_required(login_url='/accounts/login/')
 def vaciar_carrito(request):
     carrito = get_object_or_404(Carrito, usuario=request.user)
     carrito.items.all().delete()
-    messages.success(request, 'Carrito vaciado.')
-    return redirect('carrito')
+    messages.info(request, "Carrito vaciado.")
+    return redirect('ver_carrito')
 
 
 # ==========================
@@ -133,3 +126,81 @@ def contacto(request):
         msg = request.POST.get('mensaje')
         mensaje = f"Gracias, {nombre or 'usuario'}! Hemos recibido tu mensaje."
     return render(request, 'tienda/contacto.html', {'mensaje': mensaje})
+
+
+def register_view(request):
+    if request.method == 'POST':
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            login(request, user)
+            messages.success(request, "Cuenta creada. Bienvenido/a.")
+            return redirect('index')
+    else:
+        form = RegisterForm()
+    return render(request, 'registration/register.html', {'form': form})
+
+
+@login_required(login_url='/accounts/login/')
+@transaction.atomic
+def pagar(request):
+    carrito = get_object_or_404(Carrito, usuario=request.user)
+    items = carrito.items.select_related('videojuego').all()
+    total = carrito.total_carrito()
+
+    if request.method == 'POST':
+        compra = Compra.objects.create(usuario=request.user, total=total, estado='pagado')
+        for it in items:
+            DetalleCompra.objects.create(
+                compra=compra,
+                videojuego=it.videojuego,
+                cantidad=it.cantidad,
+                subtotal=it.subtotal()
+            )
+            if it.videojuego.stock is not None:
+                it.videojuego.stock = max(0, it.videojuego.stock - it.cantidad)
+                it.videojuego.save()
+        carrito.items.all().delete()
+        messages.success(request, "Pago realizado con éxito. Gracias por tu compra.")
+        return redirect('index')
+
+    return render(request, 'tienda/pagar.html', {'items': items, 'total': total})
+
+
+@login_required(login_url='/accounts/login/')
+def aumentar_item(request, pk):
+    item = get_object_or_404(ItemCarrito, pk=pk, carrito__usuario=request.user)
+    if item.videojuego.stock and item.cantidad >= item.videojuego.stock:
+        messages.warning(request, "No hay más stock disponible.")
+    else:
+        item.cantidad += 1
+        item.save()
+    return redirect('ver_carrito')
+
+
+# =========================
+# Foro / Comunidad
+# =========================
+from .models import Foro
+
+def comunidad(request):
+    hilos = Foro.objects.all().order_by('-fecha')
+    return render(request, 'tienda/comunidad.html', {'hilos': hilos})
+
+
+@login_required(login_url='/accounts/login/')
+def crear_hilo(request):
+    if request.method == 'POST':
+        titulo = request.POST.get('titulo')
+        contenido = request.POST.get('contenido')
+        if titulo and contenido:
+            Foro.objects.create(titulo=titulo, autor=request.user, contenido=contenido)
+            messages.success(request, 'Hilo creado en Comunidad.')
+            return redirect('comunidad')
+    return render(request, 'tienda/crear_hilo.html')
+
+
+def ver_hilo(request, pk):
+    hilo = get_object_or_404(Foro, pk=pk)
+    # No hay modelo Comentario en esta versión; mostramos sólo el hilo
+    return render(request, 'tienda/ver_hilo.html', {'hilo': hilo})

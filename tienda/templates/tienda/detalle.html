@@ -1,58 +1,53 @@
 {% extends 'tienda/base.html' %}
 {% load static %}
 {% block content %}
-<div class="detalle-container">
-    <div class="detalle-imagen">
-        {% if videojuego.imagen %}
-            <img src="{{ videojuego.imagen.url }}" alt="{{ videojuego.nombre }}" onerror="imageFallback(this)">
-        {% else %}
-            <img src="{% static 'tienda/img/placeholder.svg' %}" alt="Imagen por defecto">
-        {% endif %}
-    </div>
-    <div class="detalle-info">
-        <h2>{{ videojuego.nombre }}</h2>
-        <p class="precio">Precio: ${{ videojuego.precio }}</p>
-        <p><strong>Categoría:</strong> {{ videojuego.categoria }}</p>
-        <p><strong>Fecha de lanzamiento:</strong> {{ videojuego.fecha_lanzamiento }}</p>
-        <p>{{ videojuego.descripcion }}</p>
-
-        <div class="acciones">
-            {% if user.is_authenticated %}
-                <form method="post" action="{% url 'agregar_carrito' videojuego.pk %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="next" value="{{ request.path }}">
-                    <button class="btn">Agregar al carrito</button>
-                </form>
-                <a class="btn" href="{% url 'crear_resena' videojuego.pk %}">Escribir reseña</a>
+<div class="detalle-contenedor">
+    <div class="detalle-card">
+        <div class="detalle-imagen-wrap">
+            {% if videojuego.imagen %}
+                <img src="{{ videojuego.imagen.url }}" alt="{{ videojuego.nombre }}" onerror="fallback(this)">
             {% else %}
-                <a class="btn" href="{% url 'login' %}?next={% url 'detalle_videojuego' videojuego.pk %}">Inicia sesión para comprar</a>
+                <img src="{% static 'tienda/img/placeholder.svg' %}" alt="placeholder">
+            {% endif %}
+        </div>
+        <div class="detalle-info">
+            <h2>{{ videojuego.nombre }}</h2>
+            <p>{{ videojuego.descripcion }}</p>
+            <p class="precio">Precio: ${{ videojuego.precio }}</p>
+            <p>Stock: {{ videojuego.stock }}</p>
+
+            {% if user.is_authenticated %}
+                <a href="{% url 'agregar_carrito' videojuego.pk %}" class="btn btn-agregar">Agregar al carrito</a>
+            {% else %}
+                <a href="{% url 'login' %}?next={% url 'detalle_videojuego' videojuego.pk %}" class="btn">Inicia sesión para agregar</a>
             {% endif %}
         </div>
     </div>
-</div>
 
-<section class="reseñas">
-    <h3>Reseñas</h3>
-    {% if user.is_authenticated %}
-        <form method="post" action="{% url 'crear_resena' videojuego.pk %}">
-            {% csrf_token %}
-            {{ form.as_p }}
-            <button class="btn">Enviar reseña</button>
-        </form>
-    {% else %}
-        <p><a href="{% url 'login' %}?next={{ request.path }}">Inicia sesión</a> para escribir una reseña.</p>
-    {% endif %}
-
-    <div class="lista-resenas">
-        {% for r in resenas %}
-            <div class="resena">
-                <strong>{{ r.usuario.username }}</strong> — <small>{{ r.fecha }}</small>
-                <p>{{ r.comentario }}</p>
-                <p>Calificación: {{ r.calificacion }}/5</p>
+    <div class="resenas-seccion">
+        <h3>Reseñas</h3>
+        {% for res in resenas %}
+            <div class="resena-card">
+                <div class="resena-header">
+                    <strong>{{ res.usuario.username }}</strong> <span>⭐ {{ res.calificacion }}/5</span>
+                </div>
+                <p>{{ res.comentario }}</p>
+                <small>{{ res.fecha|date:"d M Y H:i" }}</small>
             </div>
         {% empty %}
-            <p>No hay reseñas todavía.</p>
+            <p>Aún no hay reseñas.</p>
         {% endfor %}
+
+        {% if user.is_authenticated %}
+        <form action="{% url 'crear_resena' videojuego.pk %}" method="post" class="form-resena">
+            {% csrf_token %}
+            {{ form.comentario }}
+            {{ form.calificacion }}
+            <button class="btn btn-enviar" type="submit">Enviar reseña</button>
+        </form>
+        {% else %}
+            <a href="{% url 'login' %}?next={% url 'detalle_videojuego' videojuego.pk %}" class="btn">Inicia sesión para dejar reseña</a>
+        {% endif %}
     </div>
-</section>
+</div>
 {% endblock %}

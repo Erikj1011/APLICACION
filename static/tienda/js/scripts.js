@@ -8,6 +8,11 @@ function imageFallback(img){
   }
 }
 
+// alias compatible con plantillas que llaman fallback(this)
+function fallback(img){
+  return imageFallback(img);
+}
+
 // Mensajes autohide
 document.addEventListener('DOMContentLoaded', function(){
   const msgs = document.querySelectorAll('.messages .msg');

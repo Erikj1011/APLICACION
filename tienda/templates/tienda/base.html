@@ -6,52 +6,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GamingWorldSoftware</title>
+    <title>GWS - GamingWorldSoftware</title>
     <link rel="stylesheet" href="{% static 'tienda/css/styles.css' %}">
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
     <header>
-        <h1>GamingWorldSoftware</h1>
-        <nav>
-            <a href="{% url 'index' %}">Inicio</a>
-            <a href="{% url 'productos' %}">Productos</a>
-            <a href="{% url 'carrito' %}">Carrito</a>
-            <a href="{% url 'contacto' %}">Contacto</a>
-        </nav>
-    </header>s
+        <div class="container-header">
+            <h1>GWS</h1>
+            <nav>
+                <a href="{% url 'index' %}">Inicio</a>
+                <a href="{% url 'productos' %}">Catálogo</a>
+                <a href="{% url 'ver_carrito' %}">Carrito</a>
+                {% if user.is_authenticated %}
+                    <span class="user-label">Hola, {{ user.username }}</span>
+                    <a href="{% url 'logout' %}">Cerrar sesión</a>
+                {% else %}
+                    <a href="{% url 'login' %}">Iniciar sesión</a>
+                    <a href="{% url 'register' %}">Registrarse</a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
 
-    <!-- Contenedor para toasts/messages -->
-    <div id="gws-toasts" aria-live="polite" aria-atomic="true"></div>
-
-        <main>
-                {% block content %}{% endblock %}
-        </main>
-
-        {# Render simple message placeholders para que el JS las convierta en toasts #}
-        {% if messages %}
-            <div style="display:none;">
+    <main>
+        <div class="container">
+            {% if messages %}
+              <div class="messages">
                 {% for message in messages %}
-                    <div data-gws-message="{{ message.tags }}">{{ message }}</div>
+                  <div class="msg {{ message.tags }}">{{ message }}</div>
                 {% endfor %}
-            </div>
-        {% endif %}
+              </div>
+            {% endif %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </main>
 
     <footer>
-        <p>&copy; 2025 GamingWorldSoftware</p>
+        <p>© {% now "Y" %} GWS - GamingWorldSoftware</p>
     </footer>
 
     <script src="{% static 'tienda/js/scripts.js' %}"></script>
-        <!-- Modal de confirmación reutilizable -->
-        <div id="gws-confirm-modal" class="gws-modal" aria-hidden="true" style="display:none;">
-            <div class="gws-modal-backdrop"></div>
-            <div class="gws-modal-panel">
-                <p id="gws-confirm-message" style="color:#e9f7ff;"></p>
-                <div style="margin-top:12px;display:flex;gap:12px;justify-content:flex-end;">
-                    <button id="gws-confirm-cancel" class="btn" style="background:transparent;border:2px solid #00d4ff;color:#00d4ff;">Cancelar</button>
-                    <button id="gws-confirm-ok" class="btn">Confirmar</button>
-                </div>
+    <!-- Modal de confirmación reutilizable -->
+    <div id="gws-confirm-modal" class="gws-modal" aria-hidden="true" style="display:none;">
+        <div class="gws-modal-backdrop"></div>
+        <div class="gws-modal-panel">
+            <h3>Confirmar acción</h3>
+            <p id="gws-confirm-message" style="color:#e9f7ff;"></p>
+            <div class="gws-modal-actions">
+                <button id="gws-confirm-cancel" class="gws-modal-btn cancel">Cancelar</button>
+                <button id="gws-confirm-ok" class="gws-modal-btn ok">Confirmar</button>
             </div>
         </div>
+    </div>
     <script src="{% static 'tienda/js/toasts.js' %}"></script>
 </body>
 </html>

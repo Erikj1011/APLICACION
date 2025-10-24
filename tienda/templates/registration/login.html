@@ -1,0 +1,15 @@
+{% extends 'tienda/base.html' %}
+{% block content %}
+<div class="auth-card">
+  <h2>Iniciar sesión</h2>
+  <form method="post">
+    {% csrf_token %}
+    <label>Usuario</label>
+    <input name="username" required>
+    <label>Contraseña</label>
+    <input type="password" name="password" required>
+    <button class="btn" type="submit">Entrar</button>
+  </form>
+  <p>¿No tienes cuenta? <a href="{% url 'register' %}">Regístrate</a></p>
+</div>
+{% endblock %}

@@ -9,7 +9,6 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
 ]
 
-# MEDIA durante desarrollo
+# Servir MEDIA en desarrollo
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-

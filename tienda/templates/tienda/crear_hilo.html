@@ -1,0 +1,12 @@
+{% extends 'tienda/base.html' %}
+{% block content %}
+<h2>Crear hilo</h2>
+<form method="post">
+  {% csrf_token %}
+  <label>Título</label>
+  <input name="titulo" required>
+  <label>Contenido</label>
+  <textarea name="contenido" rows="6" required></textarea>
+  <button class="btn" type="submit">Publicar</button>
+</form>
+{% endblock %}
