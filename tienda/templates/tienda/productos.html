@@ -1,23 +1,39 @@
 {% extends 'tienda/base.html' %}
 
 {% block content %}
-<h2>Todos los videojuegos</h2>
-<div class="productos">
-    {% for juego in videojuegos %}
-    <div class="producto">
+<section class="productos-section">
+    <header class="productos-header">
+        <h2>Todos los videojuegos</h2>
+        <p class="sub">Explora nuestra colección — gráficos neón, aventuras y clásicos.</p>
+    </header>
+
+    <div class="productos-grid">
+        {% for juego in videojuegos %}
+        <article class="card">
+            <div class="card-media">
         {% if juego.imagen %}
-        <img src="{{ juego.imagen.url }}" alt="{{ juego.nombre }}">
-        {% endif %}
-        <h3>{{ juego.nombre }}</h3>
-        <p>{{ juego.descripcion|truncatechars:100 }}</p>
-        <p>Precio: ${{ juego.precio }}</p>
-        <a href="{% url 'detalle_videojuego' juego.pk %}">Ver detalles</a>
-        {% if user.is_authenticated %}
-        <a href="{% url 'agregar_carrito' juego.pk %}">Agregar al carrito</a>
-        {% endif %}
+        <img src="{{ juego.imagen.url }}" alt="{{ juego.nombre }}" loading="lazy">
+                {% else %}
+        <img src="{% static 'tienda/img/placeholder.svg' %}" alt="sin imagen">
+                {% endif %}
+            </div>
+            <div class="card-body">
+                <h3 class="card-title">{{ juego.nombre }}</h3>
+                <p class="card-desc">{{ juego.descripcion|truncatechars:120 }}</p>
+                <div class="card-footer">
+                    <span class="price">${{ juego.precio }}</span>
+                    <div class="actions">
+                        <a class="btn btn-outline" href="{% url 'detalle_videojuego' juego.pk %}">Ver</a>
+                        {% if user.is_authenticated %}
+                        <a class="btn btn-primary" href="{% url 'agregar_carrito' juego.pk %}">Añadir</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </article>
+        {% empty %}
+        <p class="empty">No hay videojuegos disponibles.</p>
+        {% endfor %}
     </div>
-    {% empty %}
-    <p>No hay videojuegos disponibles.</p>
-    {% endfor %}
-</div>
+</section>
 {% endblock %}

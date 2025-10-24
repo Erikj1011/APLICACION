@@ -1,0 +1,43 @@
+/* Estilos neón para Gaming World Software */
+:root{
+  --bg:#081226;
+  --card:#0f1724;
+  --neon-blue:#00b4ff;
+  --neon-orange:#ff7a18;
+  --muted:#9aa8bf;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Inter, 'Segoe UI', Roboto, Arial, sans-serif;
+  background:linear-gradient(180deg,#02030a 0%,var(--bg) 60%);
+  color:#e6eef8;
+}
+header h1{ color:var(--neon-blue); text-shadow:0 0 8px rgba(0,180,255,0.25);} 
+.productos-section{max-width:1100px;margin:36px auto;padding:0 18px}
+.productos-header h2{font-size:1.75rem;margin:6px 0;color:var(--neon-blue);letter-spacing:0.6px}
+.productos-header .sub{color:var(--muted);margin:0 0 18px}
+.productos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:18px}
+.card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(0,0,0,0.12));border-radius:12px;overflow:hidden;border:1px solid rgba(255,255,255,0.03);box-shadow:0 6px 18px rgba(2,6,23,0.6);transition:transform .18s ease, box-shadow .18s ease}
+.card:hover{transform:translateY(-6px);box-shadow:0 18px 36px rgba(0,0,0,0.6);}
+.card-media{height:150px;background:linear-gradient(90deg, rgba(0,180,255,0.06), rgba(255,122,24,0.03));display:flex;align-items:center;justify-content:center}
+.card-media img{max-width:100%;max-height:100%;object-fit:cover;display:block}
+.card-body{padding:14px}
+.card-title{margin:0 0 6px;color:#dff6ff}
+.card-desc{margin:0 0 12px;color:var(--muted);font-size:0.95rem}
+.card-footer{display:flex;align-items:center;justify-content:space-between}
+.price{background:linear-gradient(90deg,var(--neon-blue),var(--neon-orange));padding:6px 10px;border-radius:8px;color:#021322;font-weight:700}
+.actions{display:flex;gap:8px}
+.btn{display:inline-block;padding:8px 10px;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.9rem}
+.btn-outline{color:var(--neon-blue);border:1px solid rgba(0,180,255,0.18);background:transparent}
+.btn-primary{background:var(--neon-orange);color:#081226}
+.empty{text-align:center;color:var(--muted);padding:30px}
+
+/* Responsive tweaks */
+@media (max-width:600px){
+  .card-media{height:130px}
+  .productos-header h2{font-size:1.4rem}
+}
+
+/* small utilities */
+.sub{font-size:0.95rem}

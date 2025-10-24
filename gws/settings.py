@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -121,3 +123,15 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+# Configuraciones de medios y estáticos añadidas por petición del usuario
+import os
+
+# Archivos multimedia (imágenes subidas desde el admin)
+MEDIA_URL = '/videojuegos/'
+MEDIA_ROOT = BASE_DIR / 'videojuegos'
+
+# Archivos estáticos (CSS, JS, imágenes fijas)
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
